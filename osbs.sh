@@ -7,7 +7,7 @@ usage() {
 
 pname=$1
 pdir="./${pname}"
-tdir=/var/osbs-build-system/templates
+tdir="$HOME/osbs-build-system/templates"
 
 if [ -z "$pname" ]; then
 	usage
@@ -33,16 +33,17 @@ cd $cur
 cp -R ${tdir}/$template $pdir
 cd $pdir
 for x in *; do
-	new=$(sed, "s,PROJECTNAME,$pname,g" <<< "$x")
-	if [ "$x" = "$new" ]; then
-		sed "s,PROJECTNAME,$pname,g" < $x > temp 
-		mv -f temp $x
-	else 
-		sed "s,PROJECTNAME,$pname,g" < $x > $new
-		if [ -e "$new" ]; then
-			rm -f $x
-		fi
-	fi
+    	new=$(sed "s/PROJECTNAME/$pname/g" <<< "$x")
+    	if [ "$x" = "$new" ]; then
+     	   sed "s/PROJECTNAME/$pname/g" < "$x" > temp 
+     	   mv -f temp "$x"
+    	else 
+     	   sed "s/PROJECTNAME/$pname/g" < "$x" > "$new"
+     	   if [ -e "$new" ]; then
+     	       rm -f "$x"
+     	   fi
+    	fi
 done
+
 
 
